@@ -7,7 +7,6 @@ namespace multithreading_Try
 {
     public partial class Form1 : Form
     {
-        
         private Thread circleThread;
         private Thread rectangleThread;
 
@@ -16,9 +15,8 @@ namespace multithreading_Try
             InitializeComponent();
         }
 
-        private void MainForm_Load(object sender, EventArgs e)
+        private void Form1_Load(object sender, EventArgs e)
         {
-            // Start threads to draw circle and rectangle
             circleThread = new Thread(DrawCircle);
             rectangleThread = new Thread(DrawRectangle);
 
@@ -28,27 +26,36 @@ namespace multithreading_Try
 
         private void DrawCircle()
         {
-            using (Graphics g = CreateGraphics())
+            using (Graphics g = this.CreateGraphics())
             {
-                // Draw a circle
                 Pen pen = new Pen(Color.Blue);
-                g.DrawEllipse(pen, 50, 50, 100, 100);
+                for (int i = 1; i <= 100; i++)
+                {
+                    g.FillRectangle(new SolidBrush(this.BackColor), new Rectangle(50, 50, i, i));
+                    /*g.Clear(this.BackColor);*/
+                    g.DrawEllipse(pen, 50, 50, i, i);
+                    Thread.Sleep(50);
+                }
             }
         }
 
         private void DrawRectangle()
         {
-            using (Graphics g = CreateGraphics())
+            using (Graphics g = this.CreateGraphics())
             {
-                // Draw a rectangle
                 Pen pen = new Pen(Color.Red);
-                g.DrawRectangle(pen, 200, 50, 100, 100);
+                for (int i = 1; i <= 100; i++)
+                {
+                    g.FillRectangle(new SolidBrush(this.BackColor), new Rectangle(300, 50, i, i));
+                    /*g.Clear(this.BackColor);*/
+                    g.DrawRectangle(pen, 300, 50, i, i);
+                    Thread.Sleep(50);
+                }
             }
         }
 
-        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        private void Form1_FormClosed(object sender, FormClosedEventArgs e)
         {
-            // Make sure to stop the threads when closing the form
             circleThread.Join();
             rectangleThread.Join();
         }
